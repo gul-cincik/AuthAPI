@@ -1,4 +1,5 @@
 ﻿using AuthAPI.Data.Dtos;
+using AuthAPI.Entities;
 using AuthAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,7 +18,7 @@ namespace AuthAPI.Controllers
             _productService = productService;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Sales Manager")]
         [Route("AddNewProduct")]
         [HttpPost]
         public async Task<IActionResult> AddNewProduct(AddProductDto dto)
@@ -30,6 +31,21 @@ namespace AuthAPI.Controllers
             }
 
             return Ok(result.Message);
+        }
+
+        [Authorize(Roles = "Sales Manager, Sales Advisor")]
+        [Route("GetAllProducts")]
+        [HttpGet]
+        public async Task<IActionResult> AddNeGetAllProductswProduct()
+        {
+            List<Product> result = await _productService.GetAllProducts();
+
+            if (result == null)
+            {
+                return BadRequest("An error occured.");
+            }
+
+            return Ok(result);
         }
     }
 }

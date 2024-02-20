@@ -55,6 +55,15 @@ namespace AuthAPI.Services
 
                 }
 
+
+                bool saveRole = await RoleAssign(appUser, dto.RoleName);
+
+                if (!saveRole)
+                {
+                    return new ServiceResponseDto { IsSuccess = true, Message = "Role could not be saved." };
+
+                }
+
                 return new ServiceResponseDto { IsSuccess = true, Message = "User Created Successfully." };
 
             }
@@ -214,6 +223,25 @@ namespace AuthAPI.Services
 
             return principal;
         }
+
+        public async Task<bool> RoleAssign(AppUser user, string roleName)
+        {
+            try
+            {
+                var result = await _userManager.AddToRoleAsync(user, roleName);
+
+                if (!result.Succeeded)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex) 
+            {
+                return false;
+            }
+        } 
 
         //private JwtSecurityToken CreateToken(List<Claim> authClaims)
         //{

@@ -51,6 +51,22 @@ namespace AuthAPI.Services
 
         }
 
-        
+        public async Task<List<Product>> GetAllProducts()
+        {
+
+            try
+            {
+                List<Product> products = await _authDbContext.Products.ToListAsync();
+
+                return products;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+
+
     }
 }
